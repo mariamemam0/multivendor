@@ -147,7 +147,21 @@ class CategoriesController extends Controller
     }
     public function trash(){
         $categories = Category::onlyTrashed()->paginate();
-        return view('dashboard.categories.trash',compact('categories'))
+        return view('dashboard.categories.trash',compact('categories'));
     }
+    public function restore(Request $request , $id){
+            $category = Category::onlyTrashed()->findOrFail($id);
+            $category->restore();
+            return redirect()->route('dashboard.categories.trash')
+            ->with('succes','Category restored');
+    }
+
+    public function forceDelete($id){
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $category->forceDelete();
+        return redirect()->route('dashboard.categories.trash')
+        ->with('succes','Category deleted forever!');
+}
+
 
 }
