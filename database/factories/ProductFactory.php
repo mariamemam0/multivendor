@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+
 use App\Models\Category;
 use App\Models\Store;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -18,7 +19,7 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->words(5,true);
+        $name = $this->faker->word;
         return [
             'name'=>$name,
              'slug'=> Str::slug($name),
