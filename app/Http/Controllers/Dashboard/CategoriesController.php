@@ -21,11 +21,12 @@ class CategoriesController extends Controller
         $request =request();
          
 
-        $categories= Category::leftJoin('categories as parents','parents.id','=','categories.parent_id')
+        $categories= Category::with('parent')/*leftJoin('categories as parents','parents.id','=','categories.parent_id')
         ->select([
             'categories.*',
             'parents.name as parent_name'
-        ])
+        ])*/
+        
         ->filter($request->query())
         ->orderBy('categories.name')
         ->paginate();
