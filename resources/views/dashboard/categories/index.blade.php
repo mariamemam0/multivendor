@@ -32,6 +32,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Parent</th>
+            <th>Products#</th>
             <th>Status</th>
             <th>Created At</th>
             <th colspan="2"></th>
@@ -43,8 +44,9 @@
         <tr>
             <td><img src="{{asset('storage/'. $category->image) }}" alt= "" height="50px"></td>
             <td>{{$category->id}}</td>
-            <td>{{$category->name}}</td>
-            <td>{{$category->parent ? $category->parent->name : 'Main Category'}}</td>
+            <td><a href ="{{route('dashboard.categories.show',$category->id)}}">{{$category->name}}</a></td>
+            <td>{{$category->parent->name }}</td>
+            <td>{{$category->products_count}}</td>
             <td>{{$category->status}}</td>
             <td>{{$category->created_at}}</td>
             <td>
@@ -62,7 +64,7 @@
         </tr>
         @empty
         <tr>
-            <td colspan="8">No categories defined</td>
+            <td colspan="9">No categories defined</td>
         </tr>
         @endforelse
     </tbody>
