@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name' , 'slug' ,'description' , 'image', 'category_id', 'store_id',
+        'price', 'compare_price', 'status'
+    ];
     protected static function booted()
     {           
         static::addGlobalScope('store',new StoreScope());
@@ -20,5 +24,16 @@ class Product extends Model
     public function store()
     {
         return $this->belongsTo(Store::class ,'store_id', 'id');
+    }
+    public function tags()
+    {
+        return $this->belongsToMany(
+            Tag::class, //related model
+            'product_tag', //pivot table name
+            'product_id', //f.k in pivot table for the current model
+            'tag_id', //f.k in pivot table for the related model
+            'id', //pk current model
+            'id' //pk related model
+        );
     }
 }

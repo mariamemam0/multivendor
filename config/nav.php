@@ -13,14 +13,14 @@ return [
     'active'=>'dashboard.categories.*',
     ],
     ['icon'=>'far fa-circle nav-icon',
-     'route'=> 'dashboard.categories.index',
+     'route'=> 'dashboard.products.index',
      'title'=> 'Products' ,
      'active'=>'dashboard.products.*',
      
 
     ],
     ['icon'=>'far fa-circle nav-icon',
-     'route'=> 'dashboard.categories.index',
+     'route'=> 'dashboard.products.index',
      'title'=> 'Orders' ,
      'active'=>'dashboard.orders.*',
    
