@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -71,6 +72,7 @@ return [
     */
 
     'timezone' => 'UTC',
+    'currency' =>'SAR',
 
     /*
     |--------------------------------------------------------------------------
@@ -183,6 +185,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'Currency' => App\Helpers\Currency::class,
     ])->toArray(),
 
 ];
