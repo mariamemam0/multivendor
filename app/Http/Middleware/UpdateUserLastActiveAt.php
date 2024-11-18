@@ -2,27 +2,27 @@
 
 namespace App\Http\Middleware;
 
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckUserType
+class UpdateUserLastActiveAt
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next , ...$types): Response
+    public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        if(!$user){
-              return redirect()->route('login');
+        if($user){
+            $user->forceFill([
+                'last_active_at' => Carbon::now(),
+            ])
+            ->save();
         }
-        if(!in_array($user->type,$types)){
-            abort(403);
-        }  
         return $next($request);
-          
     }
 }
