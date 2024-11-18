@@ -22,6 +22,9 @@ class CheckUserType
         if(!in_array($user->type,$types)){
             abort(403);
         }
-        return $next($request);
+          $response = $next($request);
+          $content = strtoupper($response->getContent());
+          $response->setContent($content);
+          return $response;
     }
 }
