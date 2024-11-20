@@ -18,8 +18,8 @@ class StoreFactory extends Factory
     {
         $name = $this->faker->words(2,true);
         return [
-            'name'=>$name,
-             'slug'=> Str::slug($name),
+             'name' => $name,
+             'slug' => Str::slug($name) . '-' . $this->faker->unique()->numberBetween(1, 100000), // Ensure uniqueness
              'description' => $this->faker->sentence(15),
              'logo_image' =>$this->faker->imageUrl(300,300),
              'cover_image' =>$this->faker->imageUrl(800,600),

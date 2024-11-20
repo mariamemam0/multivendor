@@ -19,8 +19,8 @@ class CategoryFactory extends Factory
     {
         $name = $this->faker->company;
         return [
-            'name'=>$name,
-             'slug'=> Str::slug($name),
+            'name' => $name,
+        'slug' => Str::slug($name) . '-' . $this->faker->unique()->numberBetween(1, 100000), // Ensure uniqueness
              'description' => $this->faker->sentence(15),
              'image' =>$this->faker->imageUrl,
         ];
