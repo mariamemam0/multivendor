@@ -4,21 +4,26 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Repositeries\Cart\CartModelRepositery;
+use App\Repositeries\Cart\CartModelRepository;
+use App\Repositeries\Cart\CartRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 
 class CartController extends Controller
 {
+    protected $cart;
+    public function __construct(CartRepository $cart )
+    {
+        $this->cart =$cart;
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index( )
     {
-        $repository = App::make('cart');
-         $items = $repository->get();
+
          return view('front.cart' , [
-            'cart' =>$items ,
+            'cart' =>$this->cart,
          ]);
     }
 
@@ -32,7 +37,7 @@ class CartController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request , CartRepository $cart )
     {
         $request ->validate([
             'product_id' =>['required','int','exists:products,id'],
@@ -40,8 +45,8 @@ class CartController extends Controller
 
         ]);
         $product = Product::findOrFail($request->post('product_id'));
-        $repository = new CartModelRepositery();
-        $repository->add($product , $request->post('quantity'));
+        $cart->add($product , $request->post('quantity'));
+        return redirect()->route('cart.index')->with('success','product added to cart');
     }
 
     /**
@@ -55,7 +60,7 @@ class CartController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, CartRepository $cart )
     {
         $request ->validate([
             'product_id' =>['required','int','exists:products,id'],
@@ -63,16 +68,14 @@ class CartController extends Controller
 
         ]);
         $product = Product::findOrFail($request->post('product_id'));
-        $repository = new CartModelRepositery();
-        $repository->update($product , $request->post('quantity'));
+        $cart->update($product , $request->post('quantity'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy( $id)
+    public function destroy(CartRepository $cart , $id)
     {
-        $repository = new CartModelRepositery();
-        $repository->delete($id);
+        $cart->delete($id);
     }
 }

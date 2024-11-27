@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\ProfileController;
@@ -22,6 +23,7 @@ Route::get('/',[HomeController::class ,'index'])->name('front.home');
 
 Route::get('/products',[ProductsController::class,'index'])->name('products.index');
 Route::get('/products/{product:slug}',[ProductsController::class,'show'])->name('products.show');
+Route::resource('cart' , CartController::class);
 
 require __DIR__.'/auth.php';
 require __DIR__.'/dashboard.php';
