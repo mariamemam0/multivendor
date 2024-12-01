@@ -23,24 +23,26 @@ class CartModelRepository implements CartRepository
   }
    return $this->items;
 }
-public function add(Product $product ,$quantity=1)
+public function add(Product $product, $quantity = 1)
 {
-  $item = Cart::where('product_id','=',$product->id)
-  ->where('cookie_id','=',$this->getCookieId())
-  ->first();
-  if(!$item){
-   $cart = Cart::create([
-    'user_id'=>Auth::id(),
-    'product_id'=>$product->id,
-    'quantity' =>$quantity,
-    ]);
-    $this->get()->push($cart);
-  }
-   return $item->increment('quantity',$quantity);
+    $item =  Cart::where('product_id', '=', $product->id)
+        ->first();
+    
+    if (!$item) {
+        $cart = Cart::create([
+            'user_id' => Auth::id(),
+            'product_id' => $product->id,
+            'quantity' => $quantity,
+        ]);
+        $this->get()->push($cart);
+        return $cart;
+    }
+
+    return $item->increment('quantity', $quantity);
 }
 public function update($id ,$quantity)
 {
-  Cart::where('product_id','=',$id)
+  Cart::where('id','=',$id)
   ->update([
     'quantity'=>$quantity,
   ]);
