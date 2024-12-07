@@ -58,7 +58,7 @@ class CheckoutController extends Controller
                     $order->addresses()->create($address);
                 }
             }
-
+            $cart->empty();
             DB::commit();
 
             //test4
