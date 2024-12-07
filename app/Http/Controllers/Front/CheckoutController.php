@@ -61,7 +61,7 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            //test2
+            //test3
 
         } catch (Throwable $e) {
             DB::rollBack();
