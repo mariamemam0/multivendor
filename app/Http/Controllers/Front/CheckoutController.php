@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Front;
+use App\Events\OrderCreated;
 use App\Exceptions\InvalidOrderException;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
@@ -58,10 +59,12 @@ class CheckoutController extends Controller
                     $order->addresses()->create($address);
                 }
             }
-            $cart->empty();
+           
             DB::commit();
+             
+           //event('order.created',$order,Auth::user());
+           event(new OrderCreated($order));
 
-            //test4
 
         } catch (Throwable $e) {
             DB::rollBack();
