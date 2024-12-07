@@ -61,7 +61,6 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            event('order.created', $order, Auth::user());
             
 
         } catch (Throwable $e) {
