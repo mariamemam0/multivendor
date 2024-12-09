@@ -58,15 +58,16 @@ public function empty()
 {
     Cart::query()->delete();
 }
-public function total():float
-{
-   /* return (float)Cart::join('products','products.id','=','carts.product_id')
-   ->selectRaw('SUM(products.price * carts.quantity) as total')
-   ->value('total');*/
-      return $this->get()->sum(function($item){
-      return $item->quantity  * $item->product->price;
-   });
-}
+public function total() : float
+    {
+        /*return (float) Cart::join('products', 'products.id', '=', 'carts.product_id')
+            ->selectRaw('SUM(products.price * carts.quantity) as total')
+            ->value('total');*/
+
+        return $this->get()->sum(function($item) {
+            return $item->quantity * $item->product->price;
+        });
+    }
 
 
 }
