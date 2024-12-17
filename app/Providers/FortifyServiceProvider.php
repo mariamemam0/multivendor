@@ -61,7 +61,7 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
-        Fortify::authenticateUsing([new AuthenticateUser,'authenticate']);
+       // Fortify::authenticateUsing([new AuthenticateUser,'auth'])
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
@@ -73,9 +73,9 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
 
-        if (Config::get('fortify.guard') == 'admin'){
-             Fortify::authenticateUsing([new AuthenticateUser,'authenticate']);
-             Fortify::viewPrefix('auth.');
+        if (Config::get('fortify.guard') == 'admin') {
+            Fortify::authenticateUsing([new AuthenticateUser, 'authenticate']);
+            Fortify::viewPrefix('auth.');
         } else {
             Fortify::viewPrefix('front.auth.');
         }
