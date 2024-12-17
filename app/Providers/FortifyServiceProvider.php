@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Actions\Fortify\AuthenticateUser;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
@@ -60,6 +61,8 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
+        Fortify::authenticateUsing([new AuthenticateUser,'authenticate']);
+
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
 
@@ -71,6 +74,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         if (Config::get('fortify.guard') == 'admin'){
+             Fortify::authenticateUsing([new AuthenticateUser,'authenticate']);
              Fortify::viewPrefix('auth.');
         } else {
             Fortify::viewPrefix('front.auth.');
