@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
 class ProductsController extends Controller
@@ -39,6 +40,11 @@ class ProductsController extends Controller
             'compare_price'=>'nullable|numeric|gt:price',
 
         ]);
+        $user  = $request->user();
+        if(!$user->tokenCan('product.create')){
+             abort(403, 'Not allowed');
+        }
+        
           $product = Product::create($request->all());
           return Response::json($product,201,[
             'Location'=>route('products.show',$product->id),
@@ -69,6 +75,10 @@ class ProductsController extends Controller
             'compare_price'=>'nullable|numeric|gt:price',
 
         ]);
+        $user  = $request->user();
+        if(!$user->tokenCan('product.update')){
+             abort(403, 'Not allowed');
+        }
         $product->update($request->all());
         return Response::json($product);
     }
@@ -78,6 +88,12 @@ class ProductsController extends Controller
      */
     public function destroy(string $id)
     {
+        $user  = Auth::guard('sanctum')->user();
+        if(!$user->tokenCan('product.delete')){
+             return response([
+               'message'=>'Not Allowed'
+             ],403);
+            }
        Product::destroy($id);
        return response()->json([
         'message'=>'Product deleted successfully',
