@@ -42,6 +42,8 @@ class AccessTokensController extends Controller
    public function destroy($token = null)
    {
           $user = Auth::guard('sanctum')->user();
+          //Revoke all tokens
+          //$user->tokens()->delete();
           if(null === $token){
             $user->currentAccessToken()->delete();
             return;
