@@ -18,12 +18,13 @@ class AccessTokensController extends Controller
             'email' => 'required|email|max:255',
             'password' => 'required|string|min:6',
             'device_name' => 'string|max:255',
+            'abillities'=> 'nullable|array'
            
         ]);
         $user = User::where('email',$request->email)->first();
         if($user && Hash::check($request->password,$user->password)){
             $device_name = $request->post('device_name',$request->userAgent());
-            $token = $user->createToken($device_name);
+            $token = $user->createToken($device_name,$request->post('abillities'));
             return Response::json([
                 'code' => 1,
                 'token'=> $token->plainTextToken,
