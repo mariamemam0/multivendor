@@ -73,7 +73,7 @@ return [
     */
 
     'timezone' => 'UTC',
-    'currency' =>'SAR',
+    'currency' =>'USD',
     'api_token' => env('API_TOKEN'),
 
     /*
