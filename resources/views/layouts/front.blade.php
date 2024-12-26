@@ -111,7 +111,7 @@
                             @else
                             <div class="user">
                                 <i class="lni lni-user"></i>
-                                {{__('Hello')}}
+                                {{trans('Hello')}}
                             </div>
                             <ul class="user-login">
                                 <li>
