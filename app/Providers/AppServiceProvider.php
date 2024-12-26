@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        App::setLocale('ar');
+        App::setLocale('fr');
         JsonResource::withoutWrapping();
        Validator::extend('filter',function ($attribute, $value,$params){
         return ! in_array(strtolower($value), $params);
