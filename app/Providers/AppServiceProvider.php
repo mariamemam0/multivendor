@@ -8,6 +8,8 @@ use Illuminate\Http\Resources\Json\ResourceResponse;
 use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\ServiceProvider;
 use Validator;
 
@@ -28,7 +30,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        App::setLocale('fr');
+        $locale = request('locale',Cookie::get('locale',config('app.locale'))); 
+        if(strlen($locale) > 2){
+            $locale = Crypt::decrypt($locale);
+        }
+        $locale = Crypt::decrypt($locale);
+          Cookie::queue('locale',$locale,60*24*365);
+        App::setLocale(request('locale','en'));
         JsonResource::withoutWrapping();
        Validator::extend('filter',function ($attribute, $value,$params){
         return ! in_array(strtolower($value), $params);
