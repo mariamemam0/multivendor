@@ -30,12 +30,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $locale = request('locale',Cookie::get('locale',config('app.locale'))); 
-        if(strlen($locale) > 2){
-            $locale = Crypt::decrypt($locale);
-        }
-        $locale = Crypt::decrypt($locale);
-          Cookie::queue('locale',$locale,60*24*365);
+        
         App::setLocale(request('locale','en'));
         JsonResource::withoutWrapping();
        Validator::extend('filter',function ($attribute, $value,$params){
