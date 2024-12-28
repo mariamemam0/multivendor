@@ -6,6 +6,7 @@
 @endsection
 @section('content')
 <div class="mb-5">
+    @if(Auth::user()->can)
     <a href="{{route('dashboard.categories.create')}}" class="btn btn-sm btn-outline-primary mr-2">Create</a>
     <a href="{{route('dashboard.categories.trash')}}" class="btn btn-sm btn-outline-dark">Trash</a>
 
