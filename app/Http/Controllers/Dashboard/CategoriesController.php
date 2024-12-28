@@ -7,6 +7,7 @@ use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Storage;
 
@@ -18,6 +19,10 @@ class CategoriesController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('categories.view')){
+            abort(403);
+        }
+            
         $request =request();
          
 
@@ -44,6 +49,9 @@ class CategoriesController extends Controller
      */
     public function create()
     {
+        if(Gate::denies('categories.create')){
+            abort(403);
+        }
         $parents = Category::all();
         $category = new Category();
         return view('dashboard.categories.create', compact('category','parents'));
@@ -54,6 +62,7 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('categories.create');
        $request->validate(Category::rules(), [
         'name.required' => 'This field (:attribute) is required!!',
         'unique' => 'This is name already exists!!!'
@@ -76,6 +85,9 @@ class CategoriesController extends Controller
      */
     public function show(Category $category)
     {
+        if(Gate::denise('categories.view')){
+            abort(403);
+        }
        return view('dashboard.categories.show',[
         'category' =>$category
        ]);
@@ -85,7 +97,8 @@ class CategoriesController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
-    { 
+    {  
+        Gate::authorize('categories.update');
         try{ 
         $category = Category::findOrFail($id);
     } catch(Exception $e){
@@ -110,6 +123,7 @@ class CategoriesController extends Controller
      */
     public function update(CategoryRequest $request, string $id)
     {
+        //Gate::authorize('categories.update');
         $category = Category::findOrFail($id);
         $old_image = $category->image;
 
@@ -134,6 +148,7 @@ class CategoriesController extends Controller
      */
     public function destroy(Category $category)
     {
+        Gate::authorize('categories.delete');
        
         $category->delete();
         //if($category->image){
