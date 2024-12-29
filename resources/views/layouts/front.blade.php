@@ -57,7 +57,7 @@
                                     <div class="select-position">
                                         <form action="{{route('currency.store')}}" method="post">
                                             @csrf
-                                        <select name="currency_code" onchange="this.form.submit()">
+                                        <select name="currency_code" onchange=" this.form.submit()">
                                             <option value="USD" @selected('USD'== session('currency_code'))>$ USD</option>
                                             <option value="ERU" @selected('ERU'== session('currency_code'))>€ EURO</option>
                                             <option value="ILS" @selected('ILS'== session('currency_code'))>$ ILS</option>
