@@ -9,7 +9,7 @@ class RoleAbility extends Model
 {
     use HasFactory;
     public $timestamps = false;
-
+//test
     protected $fillable = [
     'role_id',
     'ability',
