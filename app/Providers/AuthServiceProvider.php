@@ -27,12 +27,12 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('categories.create',function($user){
-            return true;
+            return false;
 
         });
 
         Gate::define('categories.update',function($user){
-            return false;
+            return true;
 
         });
         Gate::define('categories.delete',function($user){
