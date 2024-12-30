@@ -57,7 +57,9 @@ class RolesController extends Controller
      */
     public function edit(Role $role)
     {
-        return view('dashboard.roles.edit',compact('role'));
+        $role_abilities = $role->abilities()->pluck('type','ability')->toArray();
+        //dd($role_abilities);
+        return view('dashboard.roles.edit',compact('role','role_abilities'));
     }
 
     /**
@@ -70,6 +72,9 @@ class RolesController extends Controller
             'abilities'=>'required|array',
         ]);
         $role->updateWithAbilities($request);
+        return redirect()
+        ->route('dashboard.roles.index')
+        ->with('success','Role Updated Successfully');
 
     }
 
