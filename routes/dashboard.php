@@ -32,6 +32,7 @@ Route::group([
        
 
 });
+//test
 //Route::middleware('auth')->as('dashboard.')->prefix('dashboard')->group(function(){
 
 //});
