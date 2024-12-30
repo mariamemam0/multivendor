@@ -22,11 +22,20 @@ return [
      
 
     ],
+    ['icon'=>'far fa-receipt nav-icon',
+     'route'=> 'dashboard.categories.index',
+     'title'=> 'Orders' ,
+     'active'=>'dashboard.orders.*',
+     'ability'=>'orders.view',
+
+     
+
+    ],
     ['icon'=>'far fa-shield nav-icon',
      'route'=> 'dashboard.roles.index',
      'title'=> 'Roles' ,
      'active'=>'dashboard.orders.*',
-     //'ability'=>'orders.view',
+     'ability'=>'roles.view',
 
    
     ]
