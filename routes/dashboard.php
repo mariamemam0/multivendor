@@ -7,7 +7,7 @@ use App\Http\Controllers\DashboardController;
 
 
 Route::group([
-    'middleware'=>['auth:admin'],
+    'middleware'=>['auth:admin,web'],
     'as' =>'dashboard.',
     'prefix' => 'admin/dashboard'
 
