@@ -11,6 +11,11 @@ class Role extends Model
 {
     use HasFactory;
     protected $fillable = ['name'];
+
+    public function abilities()
+    {
+        return $this->hasMany(RoleAbility::class);
+    }
     public static function createWithAbilities(Request $request)
     {
         DB::beginTransaction();
