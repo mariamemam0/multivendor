@@ -23,12 +23,19 @@ class AuthServiceProvider extends ServiceProvider
           return  include base_path('data/abilities.php');
         });
     }
-//01014974498
+
     /**
      * Register any authentication / authorization services.
      */
     public function boot(): void
     {
+        $this->registerPolicies();
+        //Gate::before(function($user, $ability){
+        //    if($user->super_admin){
+          //      return true;
+         //   }
+        //});
+            
         foreach($this->app->make('abilities') as $code => $lable){
         Gate::define($code,function($user) use ($code){
              return $user->hasAbility($code);
