@@ -6,7 +6,9 @@
 @endsection
 @section('content')
 <div class="mb-5">
+    @can('create','App\Models\Role')
     <a href="{{route('dashboard.roles.create')}}" class="btn btn-sm btn-outline-primary mr-2">Create</a>
+    @endcan
 </div>
 
 
@@ -30,12 +32,12 @@
             <td><a href ="{{route('dashboard.roles.show',$role->id)}}">{{$role->name}}</a></td>
             <td>{{$role->created_at}}</td>
             <td>
-                @can('roles.update')
+                @can('update', $role)
                 <a href="{{route('dashboard.roles.edit',$role->id)}}" class="btn btn-sm btn-outline-success">Edit</a>
                 @endcan
             </td>
             <td>
-                @can('roles.delete')
+                @can('delete',$role)
                 <form action="{{route('dashboard.roles.destroy',$role->id)}}" method="post">
                     @csrf
                     <input type="hidden" name="_method" value="delete">
