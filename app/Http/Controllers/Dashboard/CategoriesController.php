@@ -8,6 +8,7 @@ use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Storage;
 
@@ -18,30 +19,35 @@ class CategoriesController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        if(!Gate::allows('categories.view')){
-            abort(403);
-        }
-            
-        $request =request();
-         
+    { if (!Gate::allows('categories.view')) {
+        abort(403);
+    }
+    
+    $request = request();
 
-        $categories= Category::with('parent')/*leftJoin('categories as parents','parents.id','=','categories.parent_id')
+    // SELECT a.*, b.name as parent_name
+    // FROM categories as a
+    // LEFT JOIN categories as b ON b.id = a.parent_id
+   
+    $categories = Category::with('parent')
+        /*leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
         ->select([
             'categories.*',
             'parents.name as parent_name'
         ])*/
-       // ->select('categories.*')
-       // ->selectRaw('(SELECT COUNT(*) FROM products WHERE category_id = categories.id) products_count')
+        //->select('categories.*')
+        //->selectRaw('(SELECT COUNT(*) FROM products WHERE AND status = 'active' AND category_id = categories.id) as products_count')
+        //->addSelect(DB::raw('(SELECT COUNT(*) FROM products WHERE category_id = categories.id) as products_count'))
         ->withCount([
-            'products' =>function($query){
-                   $query->where('status','=','active');
+            'products as products_number' => function($query) {
+                $query->where('status', '=', 'active');
             }
         ])
         ->filter($request->query())
         ->orderBy('categories.name')
-        ->paginate();
-        return view('dashboard.categories.index',compact('categories'));
+        ->paginate(); // Return Collection object
+    
+    return view('dashboard.categories.index', compact('categories'));
     }
 
     /**
@@ -49,12 +55,13 @@ class CategoriesController extends Controller
      */
     public function create()
     {
-        if(Gate::denies('categories.create')){
+        if (Gate::denies('categories.create')) {
             abort(403);
         }
+
         $parents = Category::all();
         $category = new Category();
-        return view('dashboard.categories.create', compact('category','parents'));
+        return view('dashboard.categories.create', compact('category', 'parents'));
     }
 
     /**
@@ -63,21 +70,27 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         Gate::authorize('categories.create');
-       $request->validate(Category::rules(), [
-        'name.required' => 'This field (:attribute) is required!!',
-        'unique' => 'This is name already exists!!!'
-       ]);
 
-       $request->merge([
-        'slug' =>Str::slug($request->post('name'))
-    ]); 
-    
+        $clean_data = $request->validate(Category::rules(), [
+            'required' => 'This field (:attribute) is required',
+            'name.unique' => 'This name is already exists!'
+        ]);
+
+        // Request merge
+        $request->merge([
+            'slug' => Str::slug($request->post('name'))
+        ]);
+
         $data = $request->except('image');
-        $data['image'] = $this->uploadImage($request);
-       
-         $category= Category:: create($data);
-        return redirect()->route('dashboard.categories.index')
-        ->with('success','Category created');
+        $data['image'] = $this->uploadImgae($request);
+
+        
+        // Mass assignment
+        $category = Category::create( $data );
+        
+        // PRG
+        return Redirect::route('dashboard.categories.index')
+            ->with('success', 'Category created!');
     }
 
     /**
@@ -85,12 +98,12 @@ class CategoriesController extends Controller
      */
     public function show(Category $category)
     {
-        if(Gate::denise('categories.view')){
+        if (Gate::denies('categories.view')) {
             abort(403);
         }
-       return view('dashboard.categories.show',[
-        'category' =>$category
-       ]);
+        return view('dashboard.categories.show', [
+            'category' => $category
+        ]);
     }
 
     /**
@@ -99,23 +112,24 @@ class CategoriesController extends Controller
     public function edit(string $id)
     {  
         Gate::authorize('categories.update');
-        try{ 
-        $category = Category::findOrFail($id);
-    } catch(Exception $e){
-        return redirect()->route('dashboard.categories.index')
-        ->with('info','Record not found!');
 
-    }
+        try {
+            $category = Category::findOrFail($id);
+        } catch (Exception $e) {
+            return redirect()->route('dashboard.categories.index')
+                ->with('info', 'Record not found!');
+        }
         
-        $parents= Category::where('id','<>',$id)
-        ->where(function($query)use($id) {
-            $query->whereNull('parent_id')
-            ->orwhere('parent_id','<>',$id);
+        // SELECT * FROM categories WHERE id <> $id 
+        // AND (parent_id IS NULL OR parent_id <> $id)
+        $parents = Category::where('id', '<>', $id)
+            ->where(function($query) use ($id) {
+                $query->whereNull('parent_id')
+                      ->orWhere('parent_id', '<>', $id);
+            })
+            ->get();
 
-        })
-        
-        ->get();
-        return view('dashboard.categories.edit',compact('category','parents'));
+        return view('dashboard.categories.edit', compact('category', 'parents'));
     }
 
     /**
@@ -123,23 +137,27 @@ class CategoriesController extends Controller
      */
     public function update(CategoryRequest $request, string $id)
     {
-        //Gate::authorize('categories.update');
-        $category = Category::findOrFail($id);
-        $old_image = $category->image;
+         //$request->validate(Category::rules($id));
 
-        $data = $request->except('image');
-        
-      $new_image = $this->uploadImage($request);
-      if($new_image){
-        $data['image'] = $new_image;
-      }
-        
-        $category->update($data);
-        if($old_image && $new_image){
-            Storage::disk('public')->delete($old_image);
-        }
-        return redirect()->route('dashboard.categories.index')
-        ->with('success','Category updated');
+         $category = Category::findOrFail($id);
+
+         $old_image = $category->image;
+ 
+         $data = $request->except('image');
+         $new_image = $this->uploadImgae($request);
+         if ($new_image) {
+             $data['image'] = $new_image;
+         }
+         
+         $category->update( $data );
+         //$category->fill($request->all())->save();
+ 
+         if ($old_image && $new_image) {
+             Storage::disk('public')->delete($old_image);
+         }
+ 
+         return Redirect::route('dashboard.categories.index')
+             ->with('success', 'Category updated!');
         
     }
 
@@ -149,14 +167,16 @@ class CategoriesController extends Controller
     public function destroy(Category $category)
     {
         Gate::authorize('categories.delete');
-       
+        
+        //$category = Category::findOrFail($id);
         $category->delete();
-        //if($category->image){
-        //    Storage::disk('public')->delete($category->image);
-        //}
-       // Category::where('id','=',$id)->delete();
-        return redirect()->route('dashboard.categories.index')
-        ->with('success','Category deleted');
+
+        //Category::where('id', '=', $id)->delete();
+        //Category::destroy($id);
+        
+
+        return Redirect::route('dashboard.categories.index')
+            ->with('success', 'Category deleted!');
     }
     protected function uploadImage( Request $request){
         if(!$request->hasFile('image')){
