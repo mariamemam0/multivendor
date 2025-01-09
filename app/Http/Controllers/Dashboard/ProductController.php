@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ImportProducts;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Tag;
@@ -32,7 +33,12 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $this->authorize('create',Product::class);
+        $this->authorize('view',Product::class);
+        $product = new Product();
+        $tags = implode(',',$product->tags()->pluck('name')->toArray());
+
+        return view('dashboard.products.create' ,compact('product','tags'));
+
     }
 
     /**
@@ -97,4 +103,5 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $this->authorize('delete',$product);
     }
+    
 }
