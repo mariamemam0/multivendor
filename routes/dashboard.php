@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\Dashboard\AdminsController;
 use App\Http\Controllers\Dashboard\CategoriesController;
+use App\Http\Controllers\Dashboard\ImportProductsController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\RolesController;
@@ -27,6 +28,12 @@ Route::group([
         ->name( 'categories.restore');
         Route::delete('/categories/{category}/force-delete',[CategoriesController::class,'forceDelete'])
         ->name( 'categories.force-delete');
+        
+        Route::get('product/import',[ImportProductsController::class,'create'])
+        ->name('product.import');
+        Route::post('product/import',[ImportProductsController::class,'store'])
+        ->name('product.import');
+        
         
         Route::resources([
             'products' => ProductController::class,
