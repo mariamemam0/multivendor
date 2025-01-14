@@ -74,25 +74,34 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $this->authorize('update',$product);
-       $product->update($request->except('tags'));
-       $tags = json_decode($request->post('tags'));
-       $tag_ids = [];
-       $saved_tags = Tag::all();
-       foreach($tags as $item){
-        $slug = Str::slug($item->value); 
-        $tag = $saved_tags->where('slug', $slug)->first();
-        if(!$tag){
-            $tag = Tag::create([
-                'name'=>$item->value ,
-                'slug' => $slug ,
-            ]);
+        $this->authorize('update', $product);
+
+        $product->update($request->except('tags'));
+
+        $tags = json_decode($request->post('tags', '[]')); // Default to empty array
+        $tag_ids = [];
+
+        if (is_array($tags) && !empty($tags)) {
+            $saved_tags = Tag::all();
+
+            foreach ($tags as $item) {
+                $slug = Str::slug($item->value);
+                $tag = $saved_tags->where('slug', $slug)->first();
+                if (!$tag) {
+                    $tag = Tag::create([
+                        'name' => $item->value,
+                        'slug' => $slug,
+                    ]);
+                }
+                $tag_ids[] = $tag->id;
+            }
+
+            $product->tags()->sync($tag_ids);
         }
-        $tag_ids[] = $tag->id;
-       }
-       $product->tags()->sync($tag_ids);
-       return redirect()->route('dashboard.products.index')
-       ->with('success','product Updated');
+
+        return redirect()->route('dashboard.products.index')
+            ->with('success', 'Product updated');
+
     }
 
     /**
