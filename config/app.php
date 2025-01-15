@@ -174,6 +174,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\CartServiceProvider::class, 
         App\Providers\FortifyServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
 
         
         ])->toArray(),
@@ -192,6 +193,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'Currency' => App\Helpers\Currency::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ])->toArray(),
 
 ];
