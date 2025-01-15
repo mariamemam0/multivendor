@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialLoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Front\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\Front\CartController;
@@ -36,7 +37,12 @@ Route::group([
     ->name('front.2fa');
     Route::post('currency',[CurrencyConverterController::class,'store'])
     ->name('currency.store');
+    
 });
+Route::get('auth/{provider}/redirect',[SocialLoginController::class,'redirect'])
+->name('auth.socialite.redirect');
+Route::get('auth/{provider}/callback',[SocialLoginController::class,'callback'])
+->name('auth.socialite.callback');
 
 
 //require __DIR__.'/auth.php';
