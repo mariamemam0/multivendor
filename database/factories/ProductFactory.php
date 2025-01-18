@@ -19,10 +19,10 @@ class ProductFactory extends Factory
      */
     public function definition()
 {
-    $name = $this->faker->words(2, true); // Generate a random product name
+    $name = fake()->productName; // Generate a random product name
     return [
         'name' => $name,
-        'slug' => Str::slug($name) . '-' . $this->faker->unique()->numberBetween(1, 100000), // Ensure uniqueness
+        'slug' => Str::slug($name) ,
         'description' => $this->faker->sentence(15),
         'image' => $this->faker->imageUrl(600, 600),
         'price' => $this->faker->randomFloat(1, 1, 499),
