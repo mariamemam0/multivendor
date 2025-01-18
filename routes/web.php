@@ -9,6 +9,7 @@ use App\Http\Controllers\Front\CurrencyConverterController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SocialControllelr;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -43,6 +44,8 @@ Route::get('auth/{provider}/redirect',[SocialLoginController::class,'redirect'])
 ->name('auth.socialite.redirect');
 Route::get('auth/{provider}/callback',[SocialLoginController::class,'callback'])
 ->name('auth.socialite.callback');
+
+Route::get('auth/{provider}/user',[SocialControllelr::class,'index']);
 
 
 //require __DIR__.'/auth.php';
