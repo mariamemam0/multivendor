@@ -44,4 +44,8 @@ return [
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
         'redirect' =>env('APP_URL').'/auth/facebook/callback',
     ],
+    'stripe' => [
+        'publishable_key' => env('STRIPE_PUBLISHABLE_KEY'),
+        'secret_key'=> env('STRIPE_SECRET_KEY'),
+    ],
 ];

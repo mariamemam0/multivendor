@@ -10,10 +10,7 @@ use Illuminate\Http\Request;
 class AdminsController extends Controller
 {
     
-    public function __construct()
-    {
-        $this->authorizeResource(Admin::class, 'admin');    
-    }
+  
     public function index()
     {
         $admins = Admin::paginate();
