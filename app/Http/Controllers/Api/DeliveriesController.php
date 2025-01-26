@@ -15,8 +15,8 @@ class DeliveriesController extends Controller
             'id',
             'order_id',
             'status',
-            DB::raw('ST_X(current_location) as lng'),
-            DB::raw('ST_Y(current_location) as lat'),
+            DB::raw('ST_X(current_location) as lat'),
+            DB::raw('ST_Y(current_location) as lng'),
         ])->where('id', $id)->firstOrFail();
         return $delivery;
     }
