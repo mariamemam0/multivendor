@@ -50,6 +50,11 @@ class Order extends Model
         return $this->hasOne(OrderAddress::class,'order_id','id')
         ->where('type' , '=','shipping');
     }
+
+    public function delivery()
+    {
+        return $this->hasOne(Delivery::class);
+    }
     protected static function booted()
     {
         static::creating(function(Order $order){
@@ -65,4 +70,5 @@ class Order extends Model
           }
           return $year . '0001';
     }
+    
 }
