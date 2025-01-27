@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\DeliveryLocationUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Delivery;
 use Illuminate\Support\Facades\DB;
@@ -28,8 +29,10 @@ class DeliveriesController extends Controller
         'lat' => ['required', 'numeric'],
     ]);
     $delivery->update([
-        'current_location'=> DB::raw("POINT({$request->lng}, {$request->lat})")
+        'current_location'=> DB::raw("POINT({$request->lat}, {$request->lng})")
     ]);
+    event(new DeliveryLocationUpdated($request->lat, $request->lng));
     return $delivery;
   }
+
 }
