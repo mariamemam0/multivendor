@@ -15,7 +15,7 @@
                             <li><a href="#">Orders</a></li>
                             <li>Order # {{$order->number}}</li>
                         </ul>
-                    </div>  
+                    </div>
                 </div>
             </div>
         </div>
@@ -24,9 +24,24 @@
         <div class="container"></div>
         <div id="map" style="height:50vh;"></div>
         </div>
-        </section>
-        <script>
-             // Initialize and add the map
+    </section>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('333e78898a1b14864a2f', {
+            cluster: 'ap2'
+        });
+
+        var channel = pusher.subscribe('deliveries');
+        channel.bind('App\\Events\\DeliveryLocationUpdated', function (data) {
+            alert(JSON.stringify(data));
+        });
+    </script>
+    <script>
+        // Initialize and add the map
         function initMap() {
             // The location of Delivery
             const location = {
@@ -46,9 +61,11 @@
         }
 
         window.initMap = initMap;
-        </script>
-        <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbXPn9lpgZppBc4SaowBvdtO18_bGNS6o&v=weekly&libraries=marker"
-      defer
-></script>
-        </x-front-layout>
+    </script>
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbXPn9lpgZppBc4SaowBvdtO18_bGNS6o&v=weekly&libraries=marker"
+    async
+    defer>
+</script>
+
+</x-front-layout>
